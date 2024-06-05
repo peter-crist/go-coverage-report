@@ -79,19 +79,21 @@ end_group(){
 }
 
 start_group "Download code coverage results from current run"
-gh run download "$GITHUB_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs
-mv ".github/outputs/$COVERAGE_FILE_NAME" $NEW_COVERAGE_PATH
+gh run download "$GITHUB_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/new_coverage
 end_group
 
 start_group "Download code coverage results from target branch"
-LAST_SUCCESSFUL_RUN_ID=$(gh run list --status=success --branch="$TARGET_BRANCH" --workflow="$GITHUB_WORKFLOW" --event=push --json=databaseId --limit=1 -q '.[] | .databaseId')
+# Check if LAST_SUCCESSFUL_RUN_ID is already set
+if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
+  LAST_SUCCESSFUL_RUN_ID=$(gh run list --status=success --branch="$TARGET_BRANCH" --workflow="$GITHUB_WORKFLOW" --event=push --json=databaseId --limit=1 -q '.[] | .databaseId')
+fi
+
 if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
   echo "::error::No successful run found on the target branch"
   exit 1
 fi
 
-gh run download "$LAST_SUCCESSFUL_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs
-mv ".github/outputs/$COVERAGE_FILE_NAME" $OLD_COVERAGE_PATH
+gh run download "$LAST_SUCCESSFUL_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/old_coverage
 end_group
 
 start_group "Compare code coverage results"
