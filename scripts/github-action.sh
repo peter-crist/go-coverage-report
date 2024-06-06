@@ -85,12 +85,14 @@ end_group
 start_group "Download code coverage results from target branch"
 # Check if LAST_SUCCESSFUL_RUN_ID is already set
 if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
+  echo "Fetching default target branch run ID"
   LAST_SUCCESSFUL_RUN_ID=$(gh run list --status=success --branch="$TARGET_BRANCH" --workflow="$GITHUB_WORKFLOW" --event=push --json=databaseId --limit=1 -q '.[] | .databaseId')
-fi
-
-if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
-  echo "::error::No successful run found on the target branch"
-  exit 1
+  if [ -z "$LAST_SUCCESSFUL_RUN_ID" ]; then
+    echo "::error::No successful run found on the target branch"
+    exit 1
+  fi
+else
+  echo "Using provided target-run-id: $LAST_SUCCESSFUL_RUN_ID"
 fi
 
 gh run download "$LAST_SUCCESSFUL_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/old_coverage
