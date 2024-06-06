@@ -80,7 +80,8 @@ end_group(){
 
 start_group "Download code coverage results from current run"
 gh run download "$GITHUB_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/new_coverage
-mv ".github/outputs/$COVERAGE_FILE_NAME" $NEW_COVERAGE_PATH
+ls .github/outputs/new_coverage
+mv ".github/outputs/new_coverage/$COVERAGE_FILE_NAME" $NEW_COVERAGE_PATH
 end_group
 
 start_group "Download code coverage results from target branch"
@@ -97,7 +98,8 @@ else
 fi
 
 gh run download "$LAST_SUCCESSFUL_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/old_coverage
-mv ".github/outputs/$COVERAGE_FILE_NAME" $OLD_COVERAGE_PATH
+ls .github/outputs/old_coverage
+mv ".github/outputs/old_coverage/$COVERAGE_FILE_NAME" $OLD_COVERAGE_PATH
 end_group
 
 start_group "Compare code coverage results"
