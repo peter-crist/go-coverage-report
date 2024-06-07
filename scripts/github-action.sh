@@ -78,11 +78,11 @@ end_group(){
     echo "::endgroup::"
 }
 
-start_group "Download code coverage results from current run"
+echo "Download code coverage results from current run"
 gh run download "$GITHUB_RUN_ID" --name="$COVERAGE_ARTIFACT_NAME" --dir=.github/outputs/new_coverage
 ls .github/outputs/new_coverage
 mv ".github/outputs/new_coverage/$COVERAGE_FILE_NAME" $NEW_COVERAGE_PATH
-end_group
+
 
 start_group "Download code coverage results from target branch"
 # Check if LAST_SUCCESSFUL_RUN_ID is already set
