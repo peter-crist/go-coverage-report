@@ -101,6 +101,8 @@ mv ".github/outputs/old_coverage/$COVERAGE_FILE_NAME" $OLD_COVERAGE_PATH
 end_group
 
 start_group "Compare code coverage results"
+cat $OLD_COVERAGE_PATH
+cat $NEW_COVERAGE_PATH
 go-coverage-report \
     -root="$ROOT_PACKAGE" \
     -trim="$TRIM_PACKAGE" \
